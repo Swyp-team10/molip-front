@@ -17,7 +17,7 @@ export default function Login() {
 
 	const loginHandler = () => {
 		window.location.href =
-			'http://3.39.119.209:8080/oauth2/authorization/kakao';
+			'https://api.molip.site/oauth2/authorization/kakao';
 	};
 	const handleTrialClick = () => {
 		route.push('/trial_version');
