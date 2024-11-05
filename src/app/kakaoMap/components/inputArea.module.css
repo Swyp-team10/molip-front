@@ -1,0 +1,46 @@
+.Container {
+	width: 100%;
+	height: calc(100vh - 96.2px);
+	background-color: var(--white);
+}
+
+.InputContainer {
+	width: 100%;
+	height: 50px;
+	border: 1px solid var(--gray-20);
+	display: flex;
+	justify-content: space-evenly;
+	align-items: center;
+}
+
+.Input {
+	width: 270px;
+	height: fit-content;
+	font-size: 17px;
+	line-height: 25.5px;
+	border: none;
+	font-weight: 700;
+}
+
+.Input::placeholder {
+	font-size: 17px;
+	color: var(--gray-30);
+	font-weight: 700;
+}
+
+.Input:focus {
+	outline: none;
+}
+
+.Icon {
+	cursor: pointer;
+}
+
+.Comment {
+	font-weight: 700;
+	color: var(--black);
+	font-size: 17px;
+	line-height: 25.5px;
+	width: 100%;
+	text-align: center;
+}

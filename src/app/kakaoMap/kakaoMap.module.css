@@ -20,9 +20,9 @@
 }
 
 .input {
-	font-size: 15px;
-	color: var(--gray-60);
+	font-size: 17px;
 	border: none;
+	color: var(--black);
 	width: 250px;
 }
 

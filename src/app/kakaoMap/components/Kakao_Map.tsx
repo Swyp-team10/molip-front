@@ -6,16 +6,18 @@ import { useEffect, useRef, useState } from 'react';
 import useKakaoLoader from '@/hooks/useKakaoLoader';
 import Loading from '@/components/Loading';
 import styles from './map.module.css';
+import BottomSheet from '@/components/BottomSheet/BottomSheet';
+import useSearchStore from '../store/useSearchStore';
 // import Icon_marker_current from '../../../../public/icons/kakaoMap/Icon_marker_current.svg';
 // import Icon_marker from '../../../../public/icons/kakaoMap/Icon_marker.svg';
 // import Icon_marker_selected from '../../../../public/icons/kakaoMap/Icon_marker_selected.svg';
 
 interface IKakaoMap {
-	keyword: string;
 	onLoad: () => void;
 }
 
-export default function Kakao_Map({ keyword, onLoad }: IKakaoMap) {
+export default function Kakao_Map({ onLoad }: IKakaoMap) {
+	const { searchKeyword } = useSearchStore();
 	useKakaoLoader();
 	const mapRef = useRef<kakao.maps.Map>(null);
 	const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -42,6 +44,7 @@ export default function Kakao_Map({ keyword, onLoad }: IKakaoMap) {
 	>([]);
 
 	const [map, setMap] = useState<kakao.maps.Map | null>(null);
+	const { searchResult, setSearchResult } = useSearchStore();
 
 	useEffect(() => {
 		const watchId = navigator.geolocation.watchPosition(
@@ -60,34 +63,38 @@ export default function Kakao_Map({ keyword, onLoad }: IKakaoMap) {
 	}, []);
 
 	useEffect(() => {
-		if (!map) return;
+		console.log(searchKeyword, searchResult);
+
+		if (!searchKeyword || searchKeyword.trim() === '' || !map) return;
 		const ps = new kakao.maps.services.Places();
 
-		ps.keywordSearch(keyword, (data, status) => {
+		ps.keywordSearch(searchKeyword, (data, status) => {
 			if (status === kakao.maps.services.Status.OK) {
 				const bounds = new kakao.maps.LatLngBounds();
 				const newMarkers = data.map(
 					(place: kakao.maps.services.PlacesSearchResultItem) => {
-						const position = {
-							lat: parseFloat(place.y),
-							lng: parseFloat(place.x),
-						};
-						bounds.extend(new kakao.maps.LatLng(position.lat, position.lng));
+						const position = new kakao.maps.LatLng(
+							parseFloat(place.y),
+							parseFloat(place.x),
+						);
+						bounds.extend(position);
+
 						return {
-							position,
+							position: { lat: position.getLat(), lng: position.getLng() },
 							content: place.place_name,
 						};
 					},
 				);
 
 				setMarkers(newMarkers);
+				setSearchResult(data);
 				map.setBounds(bounds);
 			}
 		});
-	}, [keyword, map]);
+	}, [searchKeyword, map]);
 
 	return (
-		<>
+		<div>
 			{isLoading ? (
 				<div className={styles.LoadingBox}>
 					<Loading backgroundColor='white' />
@@ -133,6 +140,13 @@ export default function Kakao_Map({ keyword, onLoad }: IKakaoMap) {
 					></MapMarker>
 				</Map>
 			)}
-		</>
+			<BottomSheet>
+				<ul>
+					{searchResult.map((result, index) => (
+						<li key={index}>{result.place_name}</li>
+					))}
+				</ul>
+			</BottomSheet>
+		</div>
 	);
 }
