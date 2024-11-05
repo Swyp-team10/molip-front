@@ -1,0 +1,67 @@
+.container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 100%;
+}
+
+.sub {
+	font-size: 13px;
+	font-weight: 700;
+	color: var(--gray-60);
+	margin-bottom: 10px;
+	align-self: flex-start;
+}
+
+.SelectBox {
+	margin-bottom: 30px;
+}
+
+.selectBar {
+	width: 350px;
+	min-height: 50px;
+	border: 1px solid var(--gray-40);
+	cursor: pointer;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0 20px 0 20px;
+}
+
+.ul {
+	width: 348px;
+	max-height: 250px;
+	border: 1px solid var(--gray-30);
+	background: #fff;
+	border-top: none;
+	overflow: auto;
+	color: var(--gray-60);
+}
+
+.disabled {
+	display: none;
+}
+
+.li {
+	height: 50px;
+	font-size: 15px;
+	border-bottom: 1px solid var(--gray-30);
+	padding-left: 20px;
+	display: flex;
+	align-items: center;
+	cursor: pointer;
+}
+
+.li:hover {
+	background-color: var(--gray-20);
+}
+
+.defaultMenu {
+	color: var(--gray-30);
+	font-size: 15px;
+}
+
+.selectedMenu {
+	font-size: 15px;
+	color: var(--gray-60);
+}

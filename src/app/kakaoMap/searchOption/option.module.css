@@ -1,0 +1,24 @@
+.Main {
+	height: 100svh;
+}
+
+.Container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.ButtonBox {
+	background-color: var(--white);
+	position: fixed;
+	width: 390px;
+	height: 100px;
+	bottom: 0px;
+	display: flex;
+	justify-content: center;
+	padding-top: 20px;
+}
+
+.ResetBtn {
+	cursor: pointer;
+}

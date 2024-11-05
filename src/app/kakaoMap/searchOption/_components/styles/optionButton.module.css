@@ -1,0 +1,31 @@
+.Container {
+	display: flex;
+	border: 1px solid var(--gray-20);
+	width: 350px;
+	border-radius: 10px;
+	background-color: var(--gray-20);
+	font-size: 15px;
+}
+
+.Button {
+	border: none;
+	padding: 10px 20px;
+	font-size: 16px;
+	cursor: pointer;
+	transition:
+		background-color 0.3s,
+		color 0.3s;
+	height: 40px;
+	border-radius: 10px;
+	width: 175px;
+}
+
+.inactive {
+	background-color: var(--gray-20);
+	color: var(--gray-40);
+}
+
+.active {
+	background-color: white;
+	color: var(--gray-60);
+}

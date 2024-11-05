@@ -142,7 +142,7 @@ export default function Kakao_Map({ onLoad }: IKakaoMap) {
 			)}
 			<BottomSheet>
 				<ul>
-					{searchResult.map((result, index) => (
+					{searchResult?.map((result, index) => (
 						<li key={index}>{result.place_name}</li>
 					))}
 				</ul>

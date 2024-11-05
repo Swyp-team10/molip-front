@@ -15,14 +15,14 @@ import InputArea from './components/InputArea';
 import useSearchStore from './store/useSearchStore';
 
 export default function KakaoMap() {
-	const { searchKeyword, setSearchKeyword } = useSearchStore();
+	const { searchKeyword } = useSearchStore();
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [isSearch, setIsSearch] = useState<boolean>(false);
-	const route = useRouter();
+	const router = useRouter();
 	const { isLogin } = useAuthStore.getState();
 
 	useEffect(() => {
-		!isLogin && route.push('/login');
+		!isLogin && router.push('/login');
 	}, [isLogin]);
 
 	const handleMapLoad = () => {
@@ -52,7 +52,10 @@ export default function KakaoMap() {
 								alt='search'
 							/>
 						</div>
-						<div className={styles.optionBox}>
+						<div
+							className={styles.optionBox}
+							onClick={() => router.push('/kakaoMap/searchOption')}
+						>
 							<Image src={Icon_option} width={24} height={24} alt='option' />
 						</div>
 					</>
