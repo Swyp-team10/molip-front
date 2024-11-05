@@ -5,7 +5,7 @@ import { useAuthStore } from '@/app/login/store/useAuthStore';
 export const postSearch = async (word: string): Promise<IPostSearchKeyword> => {
 	const { accessToken } = useAuthStore.getState();
 	return await api.post({
-		endpoint: `${apiRoutes.map}?word=${word}`,
+		endpoint: `${apiRoutes.map}/search?word=${word}`,
 		authorization: `${accessToken ? accessToken : process.env.NEXT_PUBLIC_ACCESS}`,
 	});
 };

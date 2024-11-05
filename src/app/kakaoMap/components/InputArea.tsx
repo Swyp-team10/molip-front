@@ -35,13 +35,17 @@ export default function InputArea({ setIsSearch }: IInputArea) {
 		ps.keywordSearch(searchKeyword, (data, status) => {
 			if (status === kakao.maps.services.Status.OK) {
 				setSearchResult(data);
+			} else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+				setSearchResult(null);
 			}
 		});
 	}, [searchKeyword]);
 
 	const { mutate: postSearchKeyword } = useMutation<IPostSearchKeyword>({
 		mutationFn: () => postSearch(searchKeyword),
-		onSuccess: () => {},
+		onSuccess: () => {
+			setIsSearch(false);
+		},
 	});
 
 	const handleEnterEvent = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -51,7 +55,7 @@ export default function InputArea({ setIsSearch }: IInputArea) {
 			!e.nativeEvent.isComposing
 		) {
 			e.preventDefault();
-			setIsSearch(false);
+			postSearchKeyword();
 		}
 	};
 

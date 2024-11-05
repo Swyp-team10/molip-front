@@ -3,16 +3,17 @@ import create from 'zustand';
 interface ISearchStore {
 	searchKeyword: string;
 	setSearchKeyword: (keyword: string) => void;
-	searchResult: kakao.maps.services.PlacesSearchResultItem[];
+	searchResult: kakao.maps.services.PlacesSearchResultItem[] | null;
 	setSearchResult: (
-		results: kakao.maps.services.PlacesSearchResultItem[],
+		results: kakao.maps.services.PlacesSearchResultItem[] | null,
 	) => void;
 }
 
 const useSearchStore = create<ISearchStore>((set) => ({
-	searchResult: [],
-	setSearchResult: (results: kakao.maps.services.PlacesSearchResultItem[]) =>
-		set({ searchResult: results }),
+	searchResult: null,
+	setSearchResult: (
+		results: kakao.maps.services.PlacesSearchResultItem[] | null,
+	) => set({ searchResult: results }),
 	searchKeyword: '',
 	setSearchKeyword: (keyword: string) => set({ searchKeyword: keyword }),
 }));
