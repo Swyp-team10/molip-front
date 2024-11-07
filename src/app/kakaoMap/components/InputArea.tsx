@@ -150,7 +150,7 @@ export default function InputArea({ setIsSearch }: IInputArea) {
 				<p className={styles.Comment}>검색어를 입력하세요.</p>
 			) : (
 				<div className={styles.KeywordsContainer}>
-					<p>최근 검색</p>
+					<p className={styles.Recent}>최근 검색</p>
 					<div className={styles.KeywordBox}>
 						{myKeywords?.map((item, index) => (
 							<p key={index}>
