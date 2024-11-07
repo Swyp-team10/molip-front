@@ -3,6 +3,7 @@ type IPostSearchKeyword = {
 };
 
 type IGetSearchKeyword = {
+	id: number;
 	word: string;
 	createdAt: string;
 };

@@ -8,6 +8,7 @@ import Loading from '@/components/Loading';
 import styles from './map.module.css';
 import BottomSheet from '@/components/BottomSheet/BottomSheet';
 import useSearchStore from '../store/useSearchStore';
+import KeywordBox from './KeywordBox';
 // import Icon_marker_current from '../../../../public/icons/kakaoMap/Icon_marker_current.svg';
 // import Icon_marker from '../../../../public/icons/kakaoMap/Icon_marker.svg';
 // import Icon_marker_selected from '../../../../public/icons/kakaoMap/Icon_marker_selected.svg';
@@ -17,7 +18,6 @@ interface IKakaoMap {
 }
 
 export default function Kakao_Map({ onLoad }: IKakaoMap) {
-	const { searchKeyword } = useSearchStore();
 	useKakaoLoader();
 	const mapRef = useRef<kakao.maps.Map>(null);
 	const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -39,12 +39,11 @@ export default function Kakao_Map({ onLoad }: IKakaoMap) {
 		position: { lat: number; lng: number };
 	} | null>(null);
 
-	const [markers, setMarkers] = useState<
-		{ position: { lat: number; lng: number }; content: string }[]
-	>([]);
+	// const [markers, setMarkers] = useState<
+	// 	{ position: { lat: number; lng: number }; content: string }[]
+	// >([]);
 
-	const [map, setMap] = useState<kakao.maps.Map | null>(null);
-	const { searchResult, setSearchResult } = useSearchStore();
+	const { map, setMap, searchResult, markers } = useSearchStore();
 
 	useEffect(() => {
 		const watchId = navigator.geolocation.watchPosition(
@@ -63,35 +62,26 @@ export default function Kakao_Map({ onLoad }: IKakaoMap) {
 	}, []);
 
 	useEffect(() => {
-		console.log(searchKeyword, searchResult);
+		if (markers.length > 0 && map) {
+			const bounds = new kakao.maps.LatLngBounds();
 
-		if (!searchKeyword || searchKeyword.trim() === '' || !map) return;
-		const ps = new kakao.maps.services.Places();
+			// 내 위치를 LatLngBounds에 추가
+			const myPosition = new kakao.maps.LatLng(position.lat, position.lng);
+			bounds.extend(myPosition);
 
-		ps.keywordSearch(searchKeyword, (data, status) => {
-			if (status === kakao.maps.services.Status.OK) {
-				const bounds = new kakao.maps.LatLngBounds();
-				const newMarkers = data.map(
-					(place: kakao.maps.services.PlacesSearchResultItem) => {
-						const position = new kakao.maps.LatLng(
-							parseFloat(place.y),
-							parseFloat(place.x),
-						);
-						bounds.extend(position);
-
-						return {
-							position: { lat: position.getLat(), lng: position.getLng() },
-							content: place.place_name,
-						};
-					},
+			// 모든 마커의 위치를 LatLngBounds에 추가
+			markers.forEach((marker) => {
+				const position = new kakao.maps.LatLng(
+					marker.position.lat,
+					marker.position.lng,
 				);
+				bounds.extend(position);
+			});
 
-				setMarkers(newMarkers);
-				setSearchResult(data);
-				map.setBounds(bounds);
-			}
-		});
-	}, [searchKeyword, map]);
+			// 마커들이 모두 보이도록 지도 경계를 설정
+			map.setBounds(bounds);
+		}
+	}, [markers, position, map]);
 
 	return (
 		<div>
@@ -111,7 +101,6 @@ export default function Kakao_Map({ onLoad }: IKakaoMap) {
 					ref={mapRef}
 					onCreate={setMap}
 				>
-					{/* <ZoomControl position={'RIGHT'} /> */}
 					{markers.map((marker) => (
 						<MapMarker
 							key={`marker-${marker.content}-${marker.position.lat},${marker.position.lng}`}
@@ -143,7 +132,9 @@ export default function Kakao_Map({ onLoad }: IKakaoMap) {
 			<BottomSheet>
 				<ul>
 					{searchResult?.map((result, index) => (
-						<li key={index}>{result.place_name}</li>
+						<p key={index}>
+							<KeywordBox>{result.place_name}</KeywordBox>
+						</p>
 					))}
 				</ul>
 			</BottomSheet>

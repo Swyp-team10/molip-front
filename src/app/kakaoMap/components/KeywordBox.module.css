@@ -1,0 +1,38 @@
+.Container {
+	display: flex;
+	align-items: center;
+	border-bottom: 1px solid var(--gray-20);
+	height: 50px;
+}
+
+.ContentBox {
+	display: flex;
+	align-items: center;
+	margin-left: 20px;
+	margin-right: 10px;
+}
+
+.Category {
+	font-size: 13px;
+	color: var(--gray-60);
+}
+
+.Distance {
+	color: var(--gray-30);
+	font-size: 17px;
+	margin-left: auto;
+	margin-right: 20px;
+}
+
+.Word {
+	font-size: 17px;
+	font-weight: 500;
+	color: var(--gray-60);
+	margin-left: 10px;
+}
+
+.Delete {
+	margin-left: auto;
+	margin-right: 20px;
+	cursor: pointer;
+}

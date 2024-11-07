@@ -2,6 +2,7 @@
 	width: 100%;
 	height: calc(100vh - 96.2px);
 	background-color: var(--white);
+	overflow: scroll;
 }
 
 .InputContainer {
