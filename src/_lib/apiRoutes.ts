@@ -10,4 +10,5 @@ export const apiRoutes = {
 	myPage: '/mypage',
 	uploadImg: '/upload',
 	invite: '/invite',
+	socketVote: "/topic/vote"
 };
