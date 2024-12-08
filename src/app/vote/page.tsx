@@ -8,7 +8,7 @@ import VoteResult from './components/voteResult';
 import TabNavigation from '@/components/TabNavigation';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
-import { getVoteResult } from '@/api/getVoteResult';
+import { getVoteResult, useVoteWebSocket } from '@/api/getVoteResult';
 import { useEffect, useState } from 'react';
 import { useAuthStore } from '../login/store/useAuthStore';
 
@@ -16,6 +16,10 @@ const steps: string[] = ['투표중', '투표완료', '투표결과'];
 
 export default function Vote() {
 	const [isVote, setIsVote] = useState<boolean>(false);
+
+	const searchParams = useSearchParams();
+	const menuId = Number(searchParams.get('menuId'));
+	const menuName = searchParams.get('menuName');
 	const router = useRouter();
 	useEffect(() => {
 		if (typeof window !== 'undefined') {
@@ -30,33 +34,45 @@ export default function Vote() {
 	}, [isLogin]);
 
 	const {
-		data: voteList,
+		data: initialVoteList,
 		isLoading,
 		isError,
 		error,
-		refetch,
 	} = useQuery<IGetVoteList>({
-		queryKey: ['VOTE_LIST'],
+		queryKey: ['VOTE_LIST', menuId],
 		queryFn: () => getVoteResult(menuId),
 	});
 
+	const [Funnel, Step, setStep] = useFunnel(
+		initialVoteList?.isVote ? steps[1] : steps[0],
+	);
+
+	const {
+		voteList,
+		isConnected,
+		isError: isSocketError,
+	} = useVoteWebSocket(menuId);
+
+	// if (isSocketError) {
+	// 	return <p>웹소켓 통신 중 에러가 발생했습니다.</p>;
+	// }
+
+	// if (!isConnected) {
+	// 	return <p>데이터 로드 중...</p>;
+	// }
+
+	const currentVoteList = voteList || initialVoteList;
+
 	useEffect(() => {
-		if (voteList) {
-			setIsVote(voteList.isVote);
+		if (initialVoteList) {
+			setIsVote(initialVoteList.isVote);
 		}
 		if (isError) {
 			if (error.message === '투표를 찾을 수 없습니다.') {
 				setIsVote(false);
 			}
 		}
-	}, [voteList, isError]);
-
-	const [Funnel, Step, setStep] = useFunnel(
-		voteList?.isVote ? steps[1] : steps[0],
-	);
-	const searchParams = useSearchParams();
-	const menuId = Number(searchParams.get('menuId'));
-	const menuName = searchParams.get('menuName');
+	}, [initialVoteList, isError]);
 
 	return (
 		<>
@@ -83,10 +99,9 @@ export default function Vote() {
 						</Step>
 						<Step name='투표결과'>
 							<VoteResult
-								voteResult={voteList}
+								voteResult={currentVoteList}
 								menuId={menuId}
 								menuName={menuName ?? ''}
-								refetch={refetch}
 							/>
 						</Step>
 					</Funnel>

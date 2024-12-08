@@ -7,29 +7,21 @@ import ProgressBar from '@/components/ProgressBar/ProgressBar';
 import Icon_check from '../../../../public/icons/checkOrange_small.svg';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { QueryObserverResult } from '@tanstack/react-query';
-import { useEffect } from 'react';
 
 interface IVoteResultProps {
 	voteResult: IGetVoteList | undefined;
 	menuId: number;
 	menuName: string;
-	refetch: () => Promise<QueryObserverResult<IGetVoteList, Error>>;
 }
 
 export default function VoteResult({
 	voteResult,
 	menuId,
 	menuName,
-	refetch,
 }: IVoteResultProps) {
 	const router = useRouter();
 	const maxVoteValue = voteResult?.votes[0]?.voteValue;
 	const teamMembers = Number(localStorage.getItem('VOTED_USER_COUNT'));
-
-	useEffect(() => {
-		refetch();
-	}, []);
 
 	return (
 		<>
