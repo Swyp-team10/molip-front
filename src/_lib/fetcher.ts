@@ -36,12 +36,6 @@ const postRefresh = async() => {
 		},
 	);
 	if (!response.ok) {
-		useAuthStore.setState({
-			isLogin: false,
-			accessToken: null
-		})
-		window.location.reload();
-		localStorage.clear();
 		throw new Error('Failed to refresh token');
 	}
 	const data = await response.json();
@@ -106,6 +100,8 @@ const _fetch = async <T = unknown, R = unknown>({
 					}
 				} catch (error) {
 					useAuthStore.setState({ isLogin: false, accessToken: null });
+					window.location.reload();
+					localStorage.clear();
 					throw new Error('Session expired. Please log in again.');
 				}
 			}
